@@ -34,6 +34,7 @@ def countPlayers():
     connection = connect()
     cursor = connection.cursor()
     result = cursor.execute("SELECT COUNT(*) AS num FROM Players")
+    # Get count value for function return
     num = cursor.fetchall()[0][0]
     connection.close()
     return num
@@ -70,8 +71,10 @@ def playerStandings():
     """
     connection = connect()
     cursor = connection.cursor()
+    # Use subqueries to count wins and matches
     wins = "SELECT COUNT(*) FROM Matches WHERE Matches.winner = Players.id"
     matches = "SELECT COUNT(*) FROM Matches WHERE Matches.p1 = Players.id OR Matches.p2 = Players.id"
+    # Create a standings view to use
     cursor.execute("CREATE OR REPLACE VIEW standings AS SELECT Players.id, Players.name,("+wins+") AS wins, ("+matches+") AS matches FROM Players ORDER BY wins DESC")
     cursor.execute("SELECT * FROM standings")
     result = cursor.fetchall()
@@ -111,7 +114,9 @@ def swissPairings():
     """
     connection = connect()
     cursor = connection.cursor()
+    # Use standings view to generate ranking based on wins
     cursor.execute("CREATE OR REPLACE VIEW ranks AS SELECT ROW_NUMBER() OVER (ORDER BY wins DESC) AS rank, id, name FROM standings")
+    # Pairing every two closest competitors
     cursor.execute("SELECT A.id AS id1, A.name as name1, B.id AS id2, B.name as name2 FROM ranks AS A, ranks AS B WHERE A.rank+1 = B.rank AND A.rank % 2 = 1")
     result = cursor.fetchall()
     connection.close()
