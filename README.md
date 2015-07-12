@@ -3,10 +3,8 @@ A basic swiss ranking tournament database created as part of Udacity's Full Stac
 
 ## Table of contents
 
-- [Quick start](#quick-start)
-- [Documentation](#documentation)
+- [What's included](#What's included)
 - [Creators](#creators)
-- [Info](#info)
 - [Copyright and license](#copyright-and-license)
 
 ### What's included
