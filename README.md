@@ -19,9 +19,8 @@ tournament/
 
 ## Software Requirements
 
-### Python 2.7.10
-
-### PostgreSQL 9.5
+Python 2.7.10
+PostgreSQL 9.5
 
 
 ## Setup Instructions
