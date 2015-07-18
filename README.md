@@ -19,20 +19,20 @@ tournament/
 
 ## Software Requirements
 
-# Python 2.7.10
+### Python 2.7.10
 
-# PostgreSQL 9.5
+### PostgreSQL 9.5
 
 
 ## Setup Instructions
 
-# Database creation
+### Database creation
 
 1. Navigate to the tournament directory in command line or terminal
 2. Start PostgreSQL using command 'psql'
 3. Create the database using command '\i tournament.sql'
 
-# Tournament & Testing
+### Tournament & Testing
 
 1. Navigate to the tournament directory in command line or terminal
 2. Run the tournament python script with command 'python tournament.py'
