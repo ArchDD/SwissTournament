@@ -1,5 +1,5 @@
 # Tournament
-A basic swiss ranking tournament database created as part of Udacity's Full Stack Web Developer nanodegree
+A basic swiss ranking tournament database that assumes there are even number of competitors
 
 ## Table of contents
 
@@ -8,14 +8,36 @@ A basic swiss ranking tournament database created as part of Udacity's Full Stac
 - [Copyright and license](#copyright-and-license)
 
 ### What's included
-This repository contains the python and sql files, including the necessary software to run including vagrant.
+This repository contains the python and sql files for the tournament results
+
+```
+tournament/
+├── tournament.py
+├── tournament_test.py
+└── tournament.sql
+```
+
+## Software Requirements
+
+# Python 2.7.10
+
+# PostgreSQL 9.5
+
 
 ## Setup Instructions
-1. Navigate to the vagrant directory on command line/terminal
-2. Enter 'vagrant up' to initialise the virtual development environment
-3. Enter 'vagrant ssh' to start the environment
-4. Now navigate to the tournament directory through the virtual environment with 'cd /vagrant/tournament'
-5. Run the tournament database with 'python tournament.py', or 'python tournament_test.py' to perform the unit testing
+
+# Database creation
+
+1. Navigate to the tournament directory in command line or terminal
+2. Start PostgreSQL using command 'psql'
+3. Create the database using command '\i tournament.sql'
+
+# Tournament & Testing
+
+1. Navigate to the tournament directory in command line or terminal
+2. Run the tournament python script with command 'python tournament.py'
+3. To see the unit testing run command 'python tournament_test.py'
+
 
 ## Creators
 

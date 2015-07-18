@@ -11,33 +11,27 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
+connection = connect()
+cursor = connection.cursor()
+
+
 def deleteMatches():
     """Remove all the match records from the database."""
-    connection = connect()
-    cursor = connection.cursor()
     cursor.execute("DELETE FROM Matches")
     connection.commit()
-    connection.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    connection = connect()
-    cursor = connection.cursor()
     cursor.execute("DELETE FROM Players")
     connection.commit()
-    connection.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    connection = connect()
-    cursor = connection.cursor()
     result = cursor.execute("SELECT COUNT(*) AS num FROM Players")
     # Get count value for function return
-    num = cursor.fetchall()[0][0]
-    connection.close()
-    return num
+    return cursor.fetchall()[0][0]
 
 
 def registerPlayer(name):
@@ -49,11 +43,8 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    connection = connect()
-    cursor = connection.cursor()
     cursor.execute("INSERT INTO Players(name) VALUES (%s)", (name,))
     connection.commit()
-    connection.close()
 
 
 def playerStandings():
@@ -69,18 +60,10 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the numer of matches the player has played
     """
-    connection = connect()
-    cursor = connection.cursor()
-    # Use subqueries to count wins and matches
-    wins = "SELECT COUNT(*) FROM Matches WHERE Matches.winner = Players.id"
-    matches = "SELECT COUNT(*) FROM Matches WHERE Matches.p1 = Players.id OR Matches.p2 = Players.id"
-    # Create a standings view to use
-    cursor.execute("CREATE OR REPLACE VIEW standings AS SELECT Players.id, Players.name,("+wins+") AS wins, ("+matches+") AS matches FROM Players ORDER BY wins DESC")
+    # Use standings view
     cursor.execute("SELECT * FROM standings")
-    result = cursor.fetchall()
     connection.commit()
-    connection.close()
-    return result
+    return cursor.fetchall()
 
 
 def reportMatch(winner, loser):
@@ -90,11 +73,8 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    connection = connect()
-    cursor = connection.cursor()
-    cursor.execute("INSERT INTO Matches(p1, p2, winner) VALUES (%s, %s, %s)", (winner, loser, winner))
+    cursor.execute("INSERT INTO Matches(winner, loser) VALUES (%s, %s)", (winner, loser))
     connection.commit()
-    connection.close()
 
 
 def swissPairings():
@@ -112,12 +92,6 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    connection = connect()
-    cursor = connection.cursor()
-    # Use standings view to generate ranking based on wins
-    cursor.execute("CREATE OR REPLACE VIEW ranks AS SELECT ROW_NUMBER() OVER (ORDER BY wins DESC) AS rank, id, name FROM standings")
-    # Pairing every two closest competitors
+    # Pair every two by ranking using rank view
     cursor.execute("SELECT A.id AS id1, A.name as name1, B.id AS id2, B.name as name2 FROM ranks AS A, ranks AS B WHERE A.rank+1 = B.rank AND A.rank % 2 = 1")
-    result = cursor.fetchall()
-    connection.close()
-    return result
+    return cursor.fetchall()
